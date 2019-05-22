@@ -7,6 +7,13 @@ const { endpoint, schema } = require('./../config/router');
 const MicroServiceCallInvalidService = require('./microservice-call-invalid-service');
 
 /**
+ * Response of the router.
+ * @typedef {Object} RouterResponse
+ * @param {String} endpoint The endpoint of microservice.
+ * @param {String} httpMethod The httpMethod of endpoint.
+ */
+
+/**
  * @class RouterFetcher
  * @classdesc Use this to make request to the router.
  */
