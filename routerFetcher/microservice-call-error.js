@@ -1,9 +1,9 @@
 'use strict';
 
-class RouterFetcherError extends Error {
+class MicroServiceCallError extends Error {
 	constructor(statusCode, statusMessage, headers, body) {
 		super();
-		this.name = 'RouterFetcherError';
+		this.name = 'MicroServiceCallError';
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
 		this.headers = headers;
@@ -11,4 +11,4 @@ class RouterFetcherError extends Error {
 	}
 }
 
-module.exports = RouterFetcherError;
+module.exports = MicroServiceCallError;

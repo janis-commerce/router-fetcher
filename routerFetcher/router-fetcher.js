@@ -4,7 +4,7 @@ const request = require('request');
 const apiKey = require('./../config/api-key');
 const { endpoint, schema } = require('./../config/router');
 
-const RouterFetcherInvalidService = require('./router-fetcher-invalid-service');
+const MicroServiceCallInvalidService = require('./microservice-call-invalid-service');
 
 /**
  * @class RouterFetcher
@@ -55,7 +55,7 @@ class RouterFetcher {
 
 				if(httpResponse.statusCode >= 400) {
 					const { headers, statusCode, statusMessage } = httpResponse;
-					return reject(new RouterFetcherInvalidService(statusCode, statusMessage, headers, body));
+					return reject(new MicroServiceCallInvalidService(statusCode, statusMessage, headers, body));
 				}
 
 				resolve(body);
@@ -89,7 +89,7 @@ class RouterFetcher {
 
 				if(httpResponse.statusCode >= 400) {
 					const { headers, statusCode, statusMessage } = httpResponse;
-					return reject(new RouterFetcherInvalidService(statusCode, statusMessage, headers, body));
+					return reject(new MicroServiceCallInvalidService(statusCode, statusMessage, headers, body));
 				}
 
 				resolve(body);
