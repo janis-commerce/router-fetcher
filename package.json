@@ -1,0 +1,30 @@
+{
+  "name": "router-fetcher",
+  "version": "1.0.0",
+  "description": "Maps services names, namespaces and methods defined in the API's schemas, to endpoints and HTTP methods for APIs's calls from any service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "export TEST_ENV=true; mocha --exit -R nyan --recursive tests/",
+    "watch-test": "export TEST_ENV=true; mocha --exit -R nyan -w --recursive",
+    "coverage": "nyc npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://pereyra_gaston@bitbucket.org/fizzmodsrl/router-fetcher.git"
+  },
+  "author": "Janis",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/fizzmodsrl/router-fetcher#readme",
+  "dependencies": {
+    "request": "2.85.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "nock": "^10.0.6",
+    "nyc": "^14.1.0",
+    "sinon": "^7.3.2"
+  }
+}
