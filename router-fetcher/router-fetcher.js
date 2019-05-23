@@ -4,7 +4,7 @@ const request = require('request');
 const apiKey = require('./../config/api-key');
 const { endpoint, schema } = require('./../config/router');
 
-const MicroServiceCallInvalidService = require('./microservice-call-invalid-service');
+const RouterFetcherError = require('./router-fetcher-error');
 
 /**
  * Response of the router.
@@ -18,13 +18,6 @@ const MicroServiceCallInvalidService = require('./microservice-call-invalid-serv
  * @classdesc Use this to make request to the router.
  */
 class RouterFetcher {
-
-	/**
-	 * @param  {String} janisClient
-	 */
-	constructor(janisClient) {
-		this.janisClient = janisClient;
-	}
 
 	/**
 	 * Get the endpoint data doing one request to the router.
@@ -46,9 +39,6 @@ class RouterFetcher {
 			'x-api-key': apiKey
 		};
 
-		if(this.janisClient)
-			requestHeaders['Janis-Client'] = this.janisClient;
-
 		return new Promise((resolve, reject) => {
 			request({
 				url: endpoint,
@@ -62,7 +52,7 @@ class RouterFetcher {
 
 				if(httpResponse.statusCode >= 400) {
 					const { headers, statusCode, statusMessage } = httpResponse;
-					return reject(new MicroServiceCallInvalidService(statusCode, statusMessage, headers, body));
+					return reject(new RouterFetcherError(statusCode, statusMessage, headers, body));
 				}
 
 				resolve(body);
@@ -96,7 +86,7 @@ class RouterFetcher {
 
 				if(httpResponse.statusCode >= 400) {
 					const { headers, statusCode, statusMessage } = httpResponse;
-					return reject(new MicroServiceCallInvalidService(statusCode, statusMessage, headers, body));
+					return reject(new RouterFetcherError(statusCode, statusMessage, headers, body));
 				}
 
 				resolve(body);

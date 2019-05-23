@@ -1,7 +1,7 @@
 {
   "name": "router-fetcher",
   "version": "1.0.0",
-  "description": "Maps services names, namespaces and methods defined in the API's schemas, to endpoints and HTTP methods for APIs's calls from any service.",
+  "description": "Use this to make request to the router",
   "main": "index.js",
   "scripts": {
     "test": "export TEST_ENV=true; mocha --exit -R nyan --recursive tests/",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://pereyra_gaston@bitbucket.org/fizzmodsrl/router-fetcher.git"
+    "url": "git+https://@bitbucket.org/fizzmodsrl/router-fetcher.git"
   },
   "author": "Janis",
   "license": "ISC",
