@@ -1,7 +1,7 @@
 {
   "name": "router-fetcher",
   "version": "1.0.0",
-  "description": "Use this to make request to the router",
+  "description": "Module to make request to the router",
   "main": "index.js",
   "scripts": {
     "test": "export TEST_ENV=true; mocha --exit -R nyan --recursive tests/",
