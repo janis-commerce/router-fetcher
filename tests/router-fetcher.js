@@ -16,11 +16,11 @@ describe('RouterFetcher module.', () => {
 		sandbox.restore();
 	});
 
-	const routerFetcher = new RouterFetcher('fizzmoadrg');
+	const routerFetcher = new RouterFetcher();
 
 	describe('getEndpoint', () => {
 
-		it('should return an MicroServiceCallInvalidService error when the router returns >= 400 status code.', async() => {
+		it('should return an RouterFetcherError when the router returns >= 400 status code.', async() => {
 
 			const qs = {
 				service: 'false',
@@ -35,7 +35,7 @@ describe('RouterFetcher module.', () => {
 					error: 'Could not find schema path'
 				});
 
-			await assert.rejects(() => routerFetcher.getEndpoint('false', 'false', 'false'), { name: 'MicroServiceCallInvalidService' });
+			await assert.rejects(() => routerFetcher.getEndpoint('false', 'false', 'false'), { name: 'RouterFetcherError' });
 		});
 
 		it('should return the endpoint and the httpMethod when the router returns 200', async() => {
@@ -91,34 +91,11 @@ describe('RouterFetcher module.', () => {
 			assert.rejects(() => routerFetcher.getEndpoint(), { message: 'fatal error' });
 		});
 
-		it('should call the route fetcher without "Janis-Client"', async() => {
-
-			const routerFetcherWithoutJanisClient = new RouterFetcher();
-
-			const qs = {
-				service: 'true',
-				namespace: 'true',
-				method: 'true'
-			};
-
-
-			nock(endpoint, {
-				badheaders: ['Janis-Client']
-			})
-				.get('')
-				.query(qs)
-				.reply(200, {
-					message: 'all good.'
-				});
-
-			await routerFetcherWithoutJanisClient.getEndpoint('true', 'true', 'true');
-		});
-
 	});
 
 	describe('getSchema', () => {
 
-		it('should return an MicroServiceCallInvalidService error when the router returns >= 400 status code.', async() => {
+		it('should return an RouterFetcherError when the router returns >= 400 status code.', async() => {
 
 			const serviceName = 'false';
 
@@ -128,7 +105,7 @@ describe('RouterFetcher module.', () => {
 					error: 'Could not find schema path'
 				});
 
-			await assert.rejects(() => routerFetcher.getSchema(serviceName), { name: 'MicroServiceCallInvalidService' });
+			await assert.rejects(() => routerFetcher.getSchema(serviceName), { name: 'RouterFetcherError' });
 		});
 
 		it('should return the schema when the router returns 200', async() => {
