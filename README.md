@@ -57,24 +57,31 @@ Response of Router
 
 ## Errors
 
-* Returns an `Object`:
-    * `StatusCode`: 
+The errors are informed with a `RouterFetcherError`.
+
+* `RouterFetcherError`:
+    * `code`: 
         * type: `Number`
-        * The status code of the response.
-    * `StatusMessage`:
+        * The status code of the error
+    * `message`:
         * type: `String`
         * The status message of the response.
-    * `headers`:
-        * type: `Object`
-        * The headers of the response.
-    * `body`:
-        * type: `Object` or `String` (if is "")
-        * The body of the response.
     * `name`: 
         * type: `String`
         * value: 
             * `RouterFetcherError`. If the response code is >= 400.
-            * `fatal error`. If the microservices can't be called.
+            * Other, Request Library Error.
+### Codes
+
+The codes are the following:
+
+|Code	|Description						|
+|-----|-----------------------------|
+|1		|Invalid Api Key Path						|
+|2		|Schema not found 				|
+|3		|Invalid Router Config Path 		|
+|4		|Endpoint not found 				|
+|5		|Reques Library Errors 	|
 
 ## Usage
 
@@ -100,11 +107,9 @@ try {
     /*
         Error Response Example:
         {
-            headers: {}, // The headers of the response.
             name: 'RouterFetcherError'
-            statusCode: 404,
-            statusMessage: 'Could not find schema path',
-            body: [{ code: 14, message: 'Invalid data' }]
+            message: 'Could not find schema path',
+            code: 2
         }
     */
     if (err.name === `RouterFetcherError`) {
