@@ -1,5 +1,8 @@
 # Router-Fetcher
 
+[![Build Status](https://travis-ci.org/janis-commerce/router-fetcher.svg?branch=master)](https://travis-ci.org/janis-commerce/router-fetcher)
+[![Coverage Status](https://coveralls.io/repos/github/janis-commerce/router-fetcher/badge.svg?branch=master)](https://coveralls.io/github/janis-commerce/router-fetcher?branch=master)
+
 Maps services names, namespaces and methods defined in the API's schemas, to endpoints and HTTP methods for APIs's calls from any service.
 
 ## Instalation
