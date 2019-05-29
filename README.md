@@ -71,6 +71,8 @@ The errors are informed with a `RouterFetcherError`.
         * value: 
             * `RouterFetcherError`. If the response code is >= 400.
             * Other, Request Library Error.
+
+For `Schemas` requests, the response will be an `object` with the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md)
 ### Codes
 
 The codes are the following:
@@ -85,12 +87,13 @@ The codes are the following:
 
 ## Usage
 
+Make a request to "SAC" microservice with the namespace "claim-type" and method "list" and get its endpoints.
+
 ```javascript
 const RouterFetcher = require('@janiscommerce/router-fetcher');
 
 const routerFetcher = new RouterFetcher();
 
-// Make a request to ms "sac" with the namspace "claim-type" and method "list"
 try {
 
     const response = await routerFetcher.getEndpoint('sac', 'claim-type', 'list');
@@ -108,11 +111,61 @@ try {
         Error Response Example:
         {
             name: 'RouterFetcherError'
-            message: 'Could not find schema path',
-            code: 2
+            message: 'Endpoint not found',
+            code: 3
         }
     */
     if (err.name === `RouterFetcherError`) {
+        // The code of the router response is >= 400.
+
+    } else {
+        // Fatal error of request library https://www.npmjs.com/package/request
+    }
+}
+```
+
+Make a request to "SAC" microservice and obtain its schemas.
+
+```javascript
+const RouterFetcher = require('@janiscommerce/router-fetcher');
+
+const routerFetcher = new RouterFetcher();
+
+try {
+
+    const response = await routerFetcher.getSchema('sac');
+
+    /*
+        Response example
+        {
+            servers: ["core"],
+            tags: ["sac"],
+            paths:
+                x-janis-namespace: claim-type
+                x-janis-method: "list"
+                get:
+                    responses:
+                    '200':
+                        description: OK
+                    '400':
+                        description: Invalid parameters
+                    '401':
+                        description: Invalid authentication
+                    '403':
+                        description: Invalid permissions
+        }
+    */
+
+} catch(err) {
+    /*
+        Error Response Example:
+        {
+            name: 'RouterFetcherError'
+            message: 'Schema not found',
+            code: 2
+        }
+    */
+    if(err.name === `RouterFetcherError`) {
         // The code of the router response is >= 400.
 
     } else {
