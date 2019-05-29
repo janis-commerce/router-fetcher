@@ -19,7 +19,6 @@ describe('RouterFetcher module.', () => {
 	};
 
 	const mockPaths = (apiKey, routerConfig) => {
-		/* eslint-disable global-require, import/no-dynamic-require */
 		mockRequire(RouterFetcher.apiKeyPath, apiKey);
 		mockRequire(RouterFetcher.routerConfigPath, routerConfig);
 	};
