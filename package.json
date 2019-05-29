@@ -1,5 +1,5 @@
 {
-  "name": "router-fetcher",
+  "name": "@janiscommerce/router-fetcher",
   "version": "1.0.0",
   "description": "Module to make request to the router",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://@bitbucket.org/fizzmodsrl/router-fetcher.git"
+    "url": "git+https://bitbucket.org/fizzmodsrl/router-fetcher.git"
   },
   "author": "Janis",
   "license": "ISC",

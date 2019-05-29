@@ -81,7 +81,7 @@ The codes are the following:
 |2		|Schema not found 				|
 |3		|Invalid Router Config Path 		|
 |4		|Endpoint not found 				|
-|5		|Reques Library Errors 	|
+|5		|Request Library Errors 	|
 
 ## Usage
 
