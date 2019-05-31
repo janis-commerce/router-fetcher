@@ -12,7 +12,7 @@ npm install @janiscommerce/router-fetcher
 
 * `new RouterFetcher()`
 
-    Router-Fetcher Constructs
+    Router-Fetcher Constructors
 
 * `getEndpoint(service, namespace, method, httpMethod)`
 
@@ -45,7 +45,7 @@ npm install @janiscommerce/router-fetcher
 
 ## Response Object
 
-Response of Router
+Response of Router for endpoints
 
 * `RouterResponse`
     * `endpoint`
@@ -54,6 +54,8 @@ Response of Router
     * `httpMethod`
         * type: `String`
         * The httpMethod of endpoint.
+
+For `Schemas` requests, the response will be an `object` with the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md)
 
 ## Errors
 
@@ -72,7 +74,7 @@ The errors are informed with a `RouterFetcherError`.
             * `RouterFetcherError`. If the response code is >= 400.
             * Other, Request Library Error.
 
-For `Schemas` requests, the response will be an `object` with the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md)
+
 ### Codes
 
 The codes are the following:
@@ -140,19 +142,19 @@ try {
         {
             servers: ["core"],
             tags: ["sac"],
-            paths:
-                x-janis-namespace: claim-type
-                x-janis-method: "list"
-                get:
-                    responses:
-                    '200':
-                        description: OK
-                    '400':
-                        description: Invalid parameters
-                    '401':
-                        description: Invalid authentication
-                    '403':
-                        description: Invalid permissions
+            paths: {
+                /sac/claim-type/list:
+                    x-janis-namespace: claim-type,
+                    x-janis-method: "list",
+                    get: {
+                        responses: {
+                        '200': description: OK,
+                        '400': description: Invalid parameters,
+                        '401': description: Invalid authentication,
+                        '403': description: Invalid permissions
+                        }
+                    }
+                }
         }
     */
 
