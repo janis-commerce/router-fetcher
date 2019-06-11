@@ -1,4 +1,4 @@
-# Router-Fetcher
+# router-fetcher
 
 Maps services names, namespaces and methods defined in the API's schemas, to endpoints and HTTP methods for APIs's calls from any service.
 
