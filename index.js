@@ -1,5 +1,5 @@
 'use strict';
 
-const { RouterFetcher } = require('./router-fetcher');
+const { RouterFetcher } = require('./lib');
 
 module.exports = RouterFetcher;

@@ -7,7 +7,7 @@ const request = require('request');
 const Settings = require('@janiscommerce/settings');
 
 const RouterFetcher = require('./../index');
-const { RouterFetcherError } = require('./../router-fetcher');
+const { RouterFetcherError } = require('../lib');
 
 const sandbox = sinon.createSandbox();
 
