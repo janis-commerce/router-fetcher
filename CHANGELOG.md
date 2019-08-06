@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Use `@janiscommerce/Settings` dependency
+
+### Changed
+- `api-key` config comes from `path/to/root/[MS_PATH]/config/.janiscommercerc.json`
+- `router` config comes from `path/to/root/[MS_PATH]/config/.janiscommercerc.json`
+- `router-fetcher` folder changed to `lib/`
 
 ## [1.0.0] - 2019-06-11
 ### Added

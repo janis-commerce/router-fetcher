@@ -8,6 +8,31 @@ Maps services names, namespaces and methods defined in the API's schemas, to end
 npm install @janiscommerce/router-fetcher
 ```
 
+## Configuration
+
+`Router-Fetcher` uses a setting JSON file.
+
+It's located in `path/to/root/[MS_PATH]/config/.janiscommercerc.json.`
+
+Needs the following fields
+
+- `apiKey`, `string`, Client Api Key.
+- `routerConfig`, `object` with URL to get Endpoints and Schemas.
+
+### Example
+
+In `path/to/root/[MS_PATH]/config/.janiscommercerc.json.`
+
+```JSON
+{
+	"routerConfig": {
+		"endpoint": "http://valid-router:7999/api/endpoint",
+		"schema": "http://valid-router:7999/api/services/{serviceName}/schema"
+	},
+	"apiKey": "aEdE312Xsa2dvxa9oPih32nFg"
+}
+```
+
 ## API
 
 * `new RouterFetcher()`
