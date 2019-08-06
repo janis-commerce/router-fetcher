@@ -1,9 +1,11 @@
 'use strict';
 
-const path = require('path');
 const request = require('request');
+const Settings = require('@janiscommerce/settings');
 const RouterFetcherError = require('./router-fetcher-error');
 
+const API_KEY = 'apiKey';
+const ROUTER_CONFIG = 'routerConfig';
 /**
  * Response of the router.
  * @typedef {Object} RouterResponse
@@ -17,54 +19,47 @@ const RouterFetcherError = require('./router-fetcher-error');
  */
 class RouterFetcher {
 
-	static get apiKeyPath() {
-		return path.join(process.cwd(), 'config/api-key');
+	static get apiKeyField() {
+		return API_KEY;
 	}
 
-	static get routerConfigPath() {
-		return path.join(process.cwd(), 'config/router');
+	static get routerConfigField() {
+		return ROUTER_CONFIG;
 	}
 
-	_cacheApiKey() {
+	get apiKey() {
 
-		let apiKey;
+		if(!this._apiKey) {
+			const apiKey = Settings.get(this.constructor.apiKeyField);
+			if(!apiKey)
+				throw new RouterFetcherError('Invalid Api Key Settings', RouterFetcherError.codes.INVALID_API_KEY_SETTING);
+			this._apiKey = apiKey;
+		}
+		return this._apiKey;
+	}
 
-		try {
-			/* eslint-disable global-require, import/no-dynamic-require */
-			apiKey = require(this.constructor.apiKeyPath);
-		} catch(error) {
-			throw new RouterFetcherError('Invalid api key path', RouterFetcherError.codes.INVALID_API_KEY_PATH);
+	get routerConfig() {
+		if(!this._routerConfig) {
+			const routerConfig = Settings.get(this.constructor.routerConfigField);
+			if(!routerConfig)
+				throw new RouterFetcherError('Invalid Router Config Settings', RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING);
+
+			this._routerConfig = routerConfig;
 		}
 
-		this.apiKey = apiKey;
-
+		return this._routerConfig;
 	}
 
-	_cacheRouterConfig() {
-
-		try {
-			/* eslint-disable global-require, import/no-dynamic-require */
-			const { endpoint, schema } = require(this.constructor.routerConfigPath);
-			this.endpoint = endpoint;
-			this.schema = schema;
-		} catch(error) {
-			throw new RouterFetcherError('Invalid router config path', RouterFetcherError.codes.INVALID_ROUTER_CONFIG_PATH);
-		}
+	get endpoint() {
+		if(!this.routerConfig.endpoint)
+			throw new RouterFetcherError('Invalid Router Config Settings. Invalid Endpoint', RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING);
+		return this.routerConfig.endpoint;
 	}
 
-	get config() {
-
-		if(!this.apiKey)
-			this._cacheApiKey();
-
-		if(!this.endpoint || !this.schema)
-			this._cacheRouterConfig();
-
-		return {
-			apiKey: this.apiKey,
-			endpoint: this.endpoint,
-			schema: this.schema
-		};
+	get schema() {
+		if(!this.routerConfig.schema)
+			throw new RouterFetcherError('Invalid Router Config Settings. Invalid Schema', RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING);
+		return this.routerConfig.schema;
 	}
 
 	/**
@@ -80,8 +75,6 @@ class RouterFetcher {
 
 		return new Promise((resolve, reject) => {
 
-			const { apiKey, endpoint } = this.config;
-
 			const qs = { namespace, method, service };
 
 			if(httpMethod)
@@ -89,11 +82,11 @@ class RouterFetcher {
 
 			const requestHeaders = {
 				'Content-Type': 'application/json',
-				'x-api-key': apiKey
+				'x-api-key': this.apiKey
 			};
 
 			request({
-				url: endpoint,
+				url: this.endpoint,
 				headers: requestHeaders,
 				qs,
 				method: 'GET',
@@ -121,15 +114,13 @@ class RouterFetcher {
 
 		return new Promise((resolve, reject) => {
 
-			const { apiKey, schema } = this.config;
-
 			const requestHeaders = {
 				'Content-Type': 'application/json',
-				'x-api-key': apiKey
+				'x-api-key': this.apiKey
 			};
 
 			request({
-				url: schema.replace('{serviceName}', service),
+				url: this.schema.replace('{serviceName}', service),
 				headers: requestHeaders,
 				method: 'GET',
 				json: true
