@@ -1,6 +1,7 @@
 'use strict';
 
-const request = require('request');
+const { promisify } = require('util');
+const request = promisify(require('request'));
 const Settings = require('@janiscommerce/settings');
 const RouterFetcherError = require('./router-fetcher-error');
 
@@ -71,37 +72,39 @@ class RouterFetcher {
 	 * @return {Promise<RouterResponse>}
 	 */
 
-	getEndpoint(service, namespace, method, httpMethod) {
+	async getEndpoint(service, namespace, method, httpMethod) {
 
-		return new Promise((resolve, reject) => {
+		const { apiKey, endpoint } = this;
+		const qs = { namespace, method, service };
 
-			const qs = { namespace, method, service };
+		if(httpMethod)
+			qs.httpMethod = httpMethod;
 
-			if(httpMethod)
-				qs.httpMethod = httpMethod;
+		const requestHeaders = {
+			'Content-Type': 'application/json',
+			'x-api-key': apiKey
+		};
 
-			const requestHeaders = {
-				'Content-Type': 'application/json',
-				'x-api-key': this.apiKey
-			};
-
-			request({
-				url: this.endpoint,
+		try {
+			const { body, statusCode } = await request({
+				url: endpoint,
 				headers: requestHeaders,
 				qs,
 				method: 'GET',
 				json: true
-			}, (err, httpResponse, body) => {
-
-				if(err)
-					return reject(new RouterFetcherError(err, RouterFetcherError.codes.REQUEST_LIB_ERROR));
-
-				if(httpResponse.statusCode >= 400)
-					return reject(new RouterFetcherError('Endpoint not found', RouterFetcherError.codes.ENDPOINT_NOT_FOUND));
-
-				resolve(body);
 			});
-		});
+
+			if(statusCode >= 400)
+				throw new RouterFetcherError('Endpoint not found', RouterFetcherError.codes.ENDPOINT_NOT_FOUND);
+
+			return body;
+
+		} catch(error) {
+
+			if(error.name === 'RouterFetcherError')
+				throw error;
+			throw new RouterFetcherError(error, RouterFetcherError.codes.REQUEST_LIB_ERROR);
+		}
 	}
 
 	/**
@@ -110,31 +113,36 @@ class RouterFetcher {
 	 * @return {Promise<RouterResponse>}
 	 */
 
-	getSchema(service) {
+	async getSchema(service) {
 
-		return new Promise((resolve, reject) => {
+		const { apiKey, schema } = this;
 
-			const requestHeaders = {
-				'Content-Type': 'application/json',
-				'x-api-key': this.apiKey
-			};
+		const requestHeaders = {
+			'Content-Type': 'application/json',
+			'x-api-key': apiKey
+		};
 
-			request({
-				url: this.schema.replace('{serviceName}', service),
+		try {
+			const { body, statusCode } = await request({
+				url: schema.replace('{serviceName}', service),
 				headers: requestHeaders,
 				method: 'GET',
 				json: true
-			}, (err, httpResponse, body) => {
-
-				if(err)
-					return reject(new RouterFetcherError(err, RouterFetcherError.codes.REQUEST_LIB_ERROR));
-
-				if(httpResponse.statusCode >= 400)
-					return reject(new RouterFetcherError('Schema not found', RouterFetcherError.codes.SCHEMA_NOT_FOUND));
-
-				resolve(body);
 			});
-		});
+
+			if(statusCode >= 400)
+				throw new RouterFetcherError('Schema not found', RouterFetcherError.codes.SCHEMA_NOT_FOUND);
+
+			return body;
+
+
+		} catch(error) {
+
+			if(error.name === 'RouterFetcherError')
+				throw error;
+
+			throw new RouterFetcherError(error.message, RouterFetcherError.codes.REQUEST_LIB_ERROR);
+		}
 	}
 }
 
