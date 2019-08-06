@@ -3,8 +3,8 @@
 const nock = require('nock');
 const assert = require('assert');
 const sinon = require('sinon');
-const mockRequire = require('mock-require');
 const request = require('request');
+const Settings = require('@janiscommerce/settings');
 
 const RouterFetcher = require('./../index');
 const { RouterFetcherError } = require('./../router-fetcher');
@@ -13,42 +13,68 @@ const sandbox = sinon.createSandbox();
 
 describe('RouterFetcher module.', () => {
 
+	const validApiKey = 'eFadkj840sdfjkesl';
+
 	const validRouter = {
 		endpoint: 'http://valid-router:3014/api/endpoint',
 		schema: 'http://valid-router:3014/api/services/{serviceName}/schema'
 	};
 
-	const mockPaths = (apiKey, routerConfig) => {
-		mockRequire(RouterFetcher.apiKeyPath, apiKey);
-		mockRequire(RouterFetcher.routerConfigPath, routerConfig);
-	};
-
-	afterEach(() => {
-		sandbox.restore();
-		mockRequire.stopAll();
-	});
-
-	const routerFetcher = new RouterFetcher();
+	let settingsStub;
+	let routerFetcher;
 
 	describe('getEndpoint', () => {
 
-		it('should return Error with invalid api-key path', async() => {
-			await assert.rejects(() => routerFetcher.getEndpoint('any', 'any', 'any'),
-				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_API_KEY_PATH });
+		beforeEach(() => {
+			routerFetcher = new RouterFetcher();
+			settingsStub = sandbox.stub(Settings, 'get');
 		});
 
-		it('should return Error with invalid router-config path', async() => {
+		afterEach(() => {
+			sandbox.restore();
+		});
 
-			mockPaths({}, null);
+		it('should return Error with invalid api-key setting when \'apiKey\' field don\'t exist in settings file ', async() => {
+
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns();
 
 			await assert.rejects(() => routerFetcher.getEndpoint('any', 'any', 'any'),
-				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_PATH });
+				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_API_KEY_SETTING });
+		});
+
+		it('should return Error with invalid router-config setting when \'routerConfig\' field don\'t exist in settings file', async() => {
+
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			await assert.rejects(() => routerFetcher.getEndpoint('any', 'any', 'any'),
+				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
+
+		});
+
+		it('should return Error with invalid endpoint when \'routerConfig\' don\'t have \'endpoint\' field ', async() => {
+
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns({
+					schema: validRouter.schema
+				});
+
+			await assert.rejects(() => routerFetcher.getEndpoint('any', 'any', 'any'),
+				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
 
 		});
 
 		it('should return the endpoint and the httpMethod when the router returns 200', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			const qs = {
 				service: 'true',
@@ -74,7 +100,11 @@ describe('RouterFetcher module.', () => {
 
 		it('should send httpMethod in the query params to the router if is passed to `getEndpoint` method.', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			const qs = {
 				service: 'true',
@@ -98,7 +128,11 @@ describe('RouterFetcher module.', () => {
 
 		it('should return an Error when router can not find the endpoints', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			const qs = {
 				service: 'false',
@@ -118,7 +152,11 @@ describe('RouterFetcher module.', () => {
 
 		it('should return a generic error when request library cannot make the call to the ms.', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			sandbox.stub(request, 'Request').callsFake(({ callback }) => {
 				callback(new Error('fatal error'));
@@ -131,9 +169,39 @@ describe('RouterFetcher module.', () => {
 
 	describe('getSchema', () => {
 
+		beforeEach(() => {
+			routerFetcher = new RouterFetcher();
+			settingsStub = sandbox.stub(Settings, 'get');
+		});
+
+		afterEach(() => {
+			sandbox.restore();
+		});
+
+		it('should return Error with invalid endpoint when \'routerConfig\' don\'t have \'schema\' field ', async() => {
+
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns({
+					endpoint: validRouter.endpoint
+				});
+
+			const serviceName = 'false';
+
+			await assert.rejects(() => routerFetcher.getSchema(serviceName),
+				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
+
+		});
+
 		it('should return an RouterFetcherError when the router returns >= 400 status code.', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			const serviceName = 'false';
 
@@ -149,7 +217,11 @@ describe('RouterFetcher module.', () => {
 
 		it('should return the schema when the router returns 200', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			const mockedResponse = {
 				servers: [{}, {}],
@@ -170,7 +242,11 @@ describe('RouterFetcher module.', () => {
 
 		it('should return a generic error when request library cannot make the call to the ms.', async() => {
 
-			mockPaths({}, validRouter);
+			settingsStub.withArgs(RouterFetcher.apiKeyField)
+				.returns(validApiKey);
+
+			settingsStub.withArgs(RouterFetcher.routerConfigField)
+				.returns(validRouter);
 
 			sandbox.stub(request, 'Request').callsFake(({ callback }) => {
 				callback(new Error('fatal error'));
