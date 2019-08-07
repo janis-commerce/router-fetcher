@@ -17,8 +17,6 @@
   "homepage": "https://bitbucket.org/fizzmodsrl/router-fetcher#readme",
   "dependencies": {
     "@janiscommerce/settings": "^1.0.1",
-    "install": "^0.13.0",
-    "npm": "^6.10.3",
     "request": "2.85.0"
   },
   "devDependencies": {
