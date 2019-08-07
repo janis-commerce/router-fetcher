@@ -1,6 +1,6 @@
 {
   "name": "@janiscommerce/router-fetcher",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Module to make request to the router",
   "main": "index.js",
   "scripts": {
