@@ -104,7 +104,6 @@ The codes are the following:
 
 |Code	|Description						|
 |-----|-----------------------------|
-|1		|Invalid Api Key Path						|
 |2		|Schema not found 				|
 |3		|Invalid Router Config Path 		|
 |4		|Endpoint not found 				|

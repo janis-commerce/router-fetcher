@@ -9,15 +9,6 @@ module.exports = {
 		mocha: true
 	},
 
-	globals: {
-		__rootpath: true,
-		coreRequire: true,
-		mainRequire: true,
-		JANIS_CORE: true,
-		JANIS_ENV: true,
-		JANIS_ENV_ALIAS: true
-	},
-
 	parserOptions: {
 		sourceType: 'script'
 	},

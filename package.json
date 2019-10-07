@@ -2,11 +2,12 @@
   "name": "@janiscommerce/router-fetcher",
   "version": "2.0.0",
   "description": "Module to make request to the router",
-  "main": "index.js",
+  "main": "lib/router-fetcher.js",
   "scripts": {
     "test": "export TEST_ENV=true; mocha --exit -R nyan --recursive tests/",
     "watch-test": "export TEST_ENV=true; mocha --exit -R nyan -w --recursive",
-    "coverage": "nyc npm test"
+    "coverage": "nyc npm test",
+    "lint": "eslint lib/ tests/"
   },
   "repository": {
     "type": "git",

@@ -6,8 +6,8 @@ const sinon = require('sinon');
 const request = require('request');
 const Settings = require('@janiscommerce/settings');
 
-const RouterFetcher = require('./../index');
-const { RouterFetcherError } = require('../lib');
+const RouterFetcher = require('../');
+const RouterFetcherError = require('../lib/router-fetcher-error');
 
 const sandbox = sinon.createSandbox();
 
