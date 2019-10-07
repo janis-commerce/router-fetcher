@@ -13,8 +13,6 @@ const sandbox = sinon.createSandbox();
 
 describe('RouterFetcher module.', () => {
 
-	const validApiKey = 'eFadkj840sdfjkesl';
-
 	const validRouter = {
 		endpoint: 'http://valid-router:3014/api/endpoint',
 		schema: 'http://valid-router:3014/api/services/{serviceName}/schema'
@@ -34,19 +32,7 @@ describe('RouterFetcher module.', () => {
 			sandbox.restore();
 		});
 
-		it('should return Error with invalid api-key setting when \'apiKey\' field don\'t exist in settings file ', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns();
-
-			await assert.rejects(routerFetcher.getEndpoint('any', 'any', 'any'),
-				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_API_KEY_SETTING });
-		});
-
 		it('should return Error with invalid router-config setting when \'routerConfig\' field don\'t exist in settings file', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			await assert.rejects(() => routerFetcher.getEndpoint('any', 'any', 'any'),
 				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
@@ -54,9 +40,6 @@ describe('RouterFetcher module.', () => {
 		});
 
 		it('should return Error with invalid endpoint when \'routerConfig\' don\'t have \'endpoint\' field ', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns({
@@ -69,9 +52,6 @@ describe('RouterFetcher module.', () => {
 		});
 
 		it('should return the endpoint and the httpMethod when the router returns 200', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
@@ -100,9 +80,6 @@ describe('RouterFetcher module.', () => {
 
 		it('should send httpMethod in the query params to the router if is passed to `getEndpoint` method.', async() => {
 
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
-
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
@@ -130,9 +107,6 @@ describe('RouterFetcher module.', () => {
 
 		it('should return an Error when router can not find the endpoints', async() => {
 
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
-
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
@@ -153,9 +127,6 @@ describe('RouterFetcher module.', () => {
 		});
 
 		it('should return a generic error when request library cannot make the call to the ms.', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
@@ -182,9 +153,6 @@ describe('RouterFetcher module.', () => {
 
 		it('should return Error with invalid endpoint when \'routerConfig\' don\'t have \'schema\' field ', async() => {
 
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
-
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns({
 					endpoint: validRouter.endpoint
@@ -198,9 +166,6 @@ describe('RouterFetcher module.', () => {
 		});
 
 		it('should return an RouterFetcherError when the router returns >= 400 status code.', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
@@ -218,9 +183,6 @@ describe('RouterFetcher module.', () => {
 		});
 
 		it('should return the schema when the router returns 200', async() => {
-
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
 
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
@@ -244,9 +206,6 @@ describe('RouterFetcher module.', () => {
 
 		it('should return a generic error when request library cannot make the call to the ms.', async() => {
 
-			settingsStub.withArgs(RouterFetcher.apiKeyField)
-				.returns(validApiKey);
-
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
@@ -259,46 +218,6 @@ describe('RouterFetcher module.', () => {
 	});
 
 	describe('Getters', () => {
-
-		describe('Get Api Key', () => {
-			beforeEach(() => {
-				routerFetcher = new RouterFetcher();
-				settingsStub = sandbox.stub(Settings, 'get');
-			});
-
-			afterEach(() => {
-				sandbox.restore();
-			});
-
-			it('should return apiKey from Settings', () => {
-				settingsStub.withArgs(RouterFetcher.apiKeyField).returns(validApiKey);
-
-				assert.strictEqual(routerFetcher.apiKey, validApiKey);
-				sandbox.assert.calledOnce(Settings.get);
-				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.apiKeyField);
-
-			});
-
-			it('should return apiKey from Settings but in a second call should use cache', () => {
-				settingsStub.withArgs(RouterFetcher.apiKeyField).returns(validApiKey);
-
-				assert.strictEqual(routerFetcher.apiKey, validApiKey);
-				assert.strictEqual(routerFetcher.apiKey, validApiKey);
-
-				sandbox.assert.calledOnce(Settings.get);
-				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.apiKeyField);
-
-			});
-
-			it('should throw Error when Settings for apiKey not exist', () => {
-				settingsStub.withArgs(RouterFetcher.apiKeyField).returns();
-
-				assert.throws(() => routerFetcher.apiKey, { name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_API_KEY_SETTING });
-				sandbox.assert.calledOnce(Settings.get);
-				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.apiKeyField);
-
-			});
-		});
 
 		describe('Get Router Config', () => {
 			beforeEach(() => {

@@ -16,7 +16,6 @@ It's located in `path/to/root/[MS_PATH]/config/.janiscommercerc.json`
 
 Needs the following fields
 
-- `apiKey`, `string`, Client Api Key.
 - `routerConfig`, `object` with URL to get Endpoints and Schemas.
 
 ### Example
@@ -28,8 +27,7 @@ In `path/to/root/[MS_PATH]/config/.janiscommercerc.json.`
 	"routerConfig": {
 		"endpoint": "http://valid-router:7999/api/endpoint",
 		"schema": "http://valid-router:7999/api/services/{serviceName}/schema"
-	},
-	"apiKey": "aEdE312Xsa2dvxa9oPih32nFg"
+	}
 }
 ```
 
@@ -43,29 +41,29 @@ In `path/to/root/[MS_PATH]/config/.janiscommercerc.json.`
 
     Get the endpoint data doing one request to the router.
 
-    - `service`: 
+    - `service`:
         - type `String`
         - The name of the microservice.
 	- `namespace`
         - type `String`
         - The namespace of the microservice.
-	- `method` 
+	- `method`
         - type `String`
         - The method of microservice.
-	- `httpMethod` 
+	- `httpMethod`
         - type `String`
         - Verb of the request.
-    
+
     Returns a `Promise` of `RouterResponse` object
 
 * `getSchema(service)`
 
     Get the schema data of a service doing one request to the router.
-    
-    - `service`: 
+
+    - `service`:
         - type `String`
         - The name of the microservice.
-    
+
     Returns a `Promise` of `RouterResponse` object
 
 ## Response Object
@@ -87,15 +85,15 @@ For `Schemas` requests, the response will be an `object` with the [OpenAPI speci
 The errors are informed with a `RouterFetcherError`.
 
 * `RouterFetcherError`:
-    * `code`: 
+    * `code`:
         * type: `Number`
         * The status code of the error
     * `message`:
         * type: `String`
         * The status message of the response.
-    * `name`: 
+    * `name`:
         * type: `String`
-        * value: 
+        * value:
             * `RouterFetcherError`. If the response code is >= 400.
             * Other, Request Library Error.
 
