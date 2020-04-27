@@ -11,11 +11,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/fizzmodsrl/router-fetcher.git"
+    "url": "git+https://github.com/janis-commerce/router-fetcher.git"
   },
   "author": "Janis",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/fizzmodsrl/router-fetcher#readme",
+  "homepage": "https://github.com/janis-commerce/router-fetcher#readme",
   "dependencies": {
     "@janiscommerce/settings": "^1.0.1",
     "request": "2.85.0"
