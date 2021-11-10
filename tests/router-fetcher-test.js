@@ -3,7 +3,7 @@
 const nock = require('nock');
 const assert = require('assert');
 const sinon = require('sinon');
-const { Axios } = require('axios');
+const axios = require('axios').default;
 
 const Settings = require('@janiscommerce/settings');
 
@@ -132,7 +132,7 @@ describe('RouterFetcher module.', () => {
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
-			sandbox.stub(Axios.prototype, 'request').rejects(new Error('Fatal error'));
+			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
 			await assert.rejects(routerFetcher.getEndpoint(), { message: 'Fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
 		});
@@ -207,7 +207,7 @@ describe('RouterFetcher module.', () => {
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
-			sandbox.stub(Axios.prototype, 'request').rejects(new Error('Fatal error'));
+			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
 			await assert.rejects(routerFetcher.getSchema(), { message: 'Fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
 		});
