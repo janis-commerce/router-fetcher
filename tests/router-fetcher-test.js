@@ -134,7 +134,7 @@ describe('RouterFetcher module.', () => {
 
 			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
-			await assert.rejects(routerFetcher.getEndpoint(), { message: 'Fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
+			await assert.rejects(routerFetcher.getEndpoint(), { message: 'Fatal error', code: RouterFetcherError.codes.AXIOS_LIB_ERROR });
 		});
 
 	});
@@ -209,7 +209,7 @@ describe('RouterFetcher module.', () => {
 
 			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
-			await assert.rejects(routerFetcher.getSchema(), { message: 'Fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
+			await assert.rejects(routerFetcher.getSchema(), { message: 'Fatal error', code: RouterFetcherError.codes.AXIOS_LIB_ERROR });
 		});
 	});
 
