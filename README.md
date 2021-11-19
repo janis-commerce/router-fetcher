@@ -1,5 +1,9 @@
 # router-fetcher
 
+![Build Status](https://github.com/janis-commerce/router-fetcher/workflows/Build%20Status/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/janis-commerce/router-fetcher/badge.svg?branch=master)](https://coveralls.io/github/janis-commerce/router-fetcher?branch=master)
+[![npm version](https://badge.fury.io/js/%40janiscommerce%2Frouter-fetcher.svg)](https://www.npmjs.com/package/@janiscommerce/router-fetcher)
+
 Maps services names, namespaces and methods defined in the API's schemas, to endpoints and HTTP methods for APIs's calls from any service.
 
 ## Instalation
