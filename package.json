@@ -8,7 +8,8 @@
     "watch-test": "export TEST_ENV=true; mocha --exit -R nyan -w --recursive",
     "coverage": "nyc npm test",
     "lint": "eslint lib/ tests/",
-    "build-types": "tsc lib/router-fetcher.js --declaration --allowJs --emitDeclarationOnly --outDir types"
+    "build-types": "tsc lib/router-fetcher.js --declaration --allowJs --emitDeclarationOnly --outDir types",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
