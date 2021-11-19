@@ -3,7 +3,8 @@
 const nock = require('nock');
 const assert = require('assert');
 const sinon = require('sinon');
-const request = require('request');
+const axios = require('axios').default;
+
 const Settings = require('@janiscommerce/settings');
 
 const RouterFetcher = require('../');
@@ -72,7 +73,6 @@ describe('RouterFetcher module.', () => {
 				.query(qs)
 				.reply(200, mockedMicroservice);
 
-
 			const response = await routerFetcher.getEndpoint('true', 'true', 'true');
 
 			assert.deepStrictEqual(response, mockedMicroservice);
@@ -122,6 +122,7 @@ describe('RouterFetcher module.', () => {
 				.reply(404, {
 					error: 'Could not find endpoints'
 				});
+
 			await assert.rejects(routerFetcher.getEndpoint('false', 'false', 'false'),
 				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.ENDPOINT_NOT_FOUND });
 		});
@@ -131,11 +132,9 @@ describe('RouterFetcher module.', () => {
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
-			sandbox.stub(request, 'Request').callsFake(({ callback }) => {
-				callback(new Error('fatal error'));
-			});
+			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
-			await assert.rejects(routerFetcher.getEndpoint(), { message: 'fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
+			await assert.rejects(routerFetcher.getEndpoint(), { message: 'Fatal error', code: RouterFetcherError.codes.AXIOS_LIB_ERROR });
 		});
 
 	});
@@ -162,7 +161,6 @@ describe('RouterFetcher module.', () => {
 
 			await assert.rejects(routerFetcher.getSchema(serviceName),
 				{ name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
-
 		});
 
 		it('should return an RouterFetcherError when the router returns >= 400 status code.', async() => {
@@ -209,11 +207,9 @@ describe('RouterFetcher module.', () => {
 			settingsStub.withArgs(RouterFetcher.routerConfigField)
 				.returns(validRouter);
 
-			sandbox.stub(request, 'Request').callsFake(({ callback }) => {
-				callback(new Error('fatal error'));
-			});
+			sandbox.stub(axios, 'request').rejects(new Error('Fatal error'));
 
-			await assert.rejects(routerFetcher.getSchema(), { message: 'fatal error', code: RouterFetcherError.codes.REQUEST_LIB_ERROR });
+			await assert.rejects(routerFetcher.getSchema(), { message: 'Fatal error', code: RouterFetcherError.codes.AXIOS_LIB_ERROR });
 		});
 	});
 
@@ -275,7 +271,6 @@ describe('RouterFetcher module.', () => {
 				assert.strictEqual(routerFetcher.endpoint, validRouter.endpoint);
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 
 			it('should return endpoint from Settings but in a second call should use cache for router-fetcher', () => {
@@ -286,7 +281,6 @@ describe('RouterFetcher module.', () => {
 
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 
 			it('should throw Error when Settings for routerConfig not exist', () => {
@@ -297,7 +291,6 @@ describe('RouterFetcher module.', () => {
 				assert.throws(() => routerFetcher.endpoint, { name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 		});
 
@@ -317,7 +310,6 @@ describe('RouterFetcher module.', () => {
 				assert.strictEqual(routerFetcher.schema, validRouter.schema);
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 
 			it('should return schema from Settings but in a second call should use cache for router-fetcher', () => {
@@ -328,7 +320,6 @@ describe('RouterFetcher module.', () => {
 
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 
 			it('should throw Error when Settings for routerConfig not exist', () => {
@@ -339,11 +330,7 @@ describe('RouterFetcher module.', () => {
 				assert.throws(() => routerFetcher.schema, { name: 'RouterFetcherError', code: RouterFetcherError.codes.INVALID_ROUTER_CONFIG_SETTING });
 				sandbox.assert.calledOnce(Settings.get);
 				sandbox.assert.calledWithExactly(Settings.get.getCall(0), RouterFetcher.routerConfigField);
-
 			});
 		});
-
-
 	});
-
 });
