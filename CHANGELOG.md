@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.1.1] - 2021-11-19
+### Added
+- TS typings
+
+### Changed
+- Replaced `request` dependency with `axios`
+
 ## [2.1.0] - 2019-10-07
 ### Removed
 - `api-key` is no longer used. Setting can be removed.
