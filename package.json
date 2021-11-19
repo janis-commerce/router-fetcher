@@ -38,5 +38,5 @@
     "lib/",
     "types/"
   ],
-  "types": "types/index.d.ts"
+  "types": "types/router-fetcher.d.ts"
 }
