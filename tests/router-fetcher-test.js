@@ -7,7 +7,7 @@ const axios = require('axios').default;
 
 const Settings = require('@janiscommerce/settings');
 
-const RouterFetcher = require('../');
+const RouterFetcher = require('..');
 const RouterFetcherError = require('../lib/router-fetcher-error');
 
 const sandbox = sinon.createSandbox();
